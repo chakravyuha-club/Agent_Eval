@@ -1,81 +1,127 @@
 """
-SSRF Protection and URL Sandboxing
-Validates target hostnames and IPs against private, loopback, and metadata ranges.
+SSRF Protection and URL Sandboxing (hardened).
+
+Changes vs. original:
+  * Uses ipaddress `is_global` (deny-by-default) and unwraps IPv4-mapped IPv6.
+  * `validate_and_resolve()` returns the validated IPs so the HTTP client can PIN the
+    connection to them (defeats DNS-rebinding TOCTOU between check and connect).
+  * HTTPS-only + port allow-list + no userinfo + URL length cap (strict mode).
+  * Localhost bypass is ignored when ENVIRONMENT=production (fail-closed).
+  * `validate_target_url()` keeps its legacy (bool, msg) contract for existing callers/tests.
 """
 import ipaddress
+import os
 import socket
+from dataclasses import dataclass, field
+from typing import List, Optional, Sequence, Tuple
 from urllib.parse import urlparse
-from typing import Tuple, Optional
 
-# Prohibited CIDR networks
-BLOCKED_NETWORKS = [
-    ipaddress.ip_network("0.0.0.0/8"),
-    ipaddress.ip_network("10.0.0.0/8"),
-    ipaddress.ip_network("100.64.0.0/10"),
-    ipaddress.ip_network("127.0.0.0/8"),
-    ipaddress.ip_network("169.254.0.0/16"),       # Link-local and AWS/GCP/Azure Metadata
-    ipaddress.ip_network("172.16.0.0/12"),
-    ipaddress.ip_network("192.0.0.0/24"),
-    ipaddress.ip_network("192.0.2.0/24"),
-    ipaddress.ip_network("192.88.99.0/24"),
-    ipaddress.ip_network("192.168.0.0/16"),
-    ipaddress.ip_network("198.18.0.0/15"),
-    ipaddress.ip_network("198.51.100.0/24"),
-    ipaddress.ip_network("203.0.113.0/24"),
-    ipaddress.ip_network("224.0.0.0/4"),          # Multicast
-    ipaddress.ip_network("240.0.0.0/4"),
-    ipaddress.ip_network("255.255.255.255/32"),
-    ipaddress.ip_network("::1/128"),              # IPv6 loopback
-    ipaddress.ip_network("fc00::/7"),             # IPv6 Unique local
-    ipaddress.ip_network("fe80::/10"),            # IPv6 Link-local
-]
+MAX_URL_LENGTH = 2048
+DEFAULT_ALLOWED_PORTS: Tuple[int, ...] = (443, 8443)
+
+# Extra explicit ranges (documentation / benchmarking / 6to4 relay / NAT64 etc.).
+# `is_global` already rejects most of these; kept explicit for audit readability.
+BLOCKED_NETWORKS = [ipaddress.ip_network(n) for n in (
+    "0.0.0.0/8", "10.0.0.0/8", "100.64.0.0/10", "127.0.0.0/8", "169.254.0.0/16",
+    "172.16.0.0/12", "192.0.0.0/24", "192.0.2.0/24", "192.88.99.0/24", "192.168.0.0/16",
+    "198.18.0.0/15", "198.51.100.0/24", "203.0.113.0/24", "224.0.0.0/4", "240.0.0.0/4",
+    "255.255.255.255/32", "::/128", "::1/128", "fc00::/7", "fe80::/10", "ff00::/8",
+    "64:ff9b::/96", "2001:db8::/32", "2002::/16",
+)]
+
+LOOPBACK_NAMES = {"localhost", "localhost.localdomain", "ip6-localhost", "metadata.google.internal"}
+
+
+def _production() -> bool:
+    return os.environ.get("ENVIRONMENT", "development").lower() == "production"
+
 
 def is_ip_prohibited(ip_str: str) -> bool:
-    """Checks whether an IP address belongs to private, loopback, or metadata CIDR ranges."""
+    """True if the address is not a plain public unicast address (deny-by-default)."""
     try:
-        ip_obj = ipaddress.ip_address(ip_str)
-        if ip_obj.is_private or ip_obj.is_loopback or ip_obj.is_link_local or ip_obj.is_multicast or ip_obj.is_reserved:
-            return True
-        for net in BLOCKED_NETWORKS:
-            if ip_obj in net:
-                return True
-        return False
+        ip = ipaddress.ip_address(ip_str.split("%")[0])
     except ValueError:
         return True
+    if isinstance(ip, ipaddress.IPv6Address) and ip.ipv4_mapped is not None:
+        ip = ip.ipv4_mapped  # ::ffff:127.0.0.1 must be judged as 127.0.0.1
+    if not ip.is_global:
+        return True
+    return any(ip in net for net in BLOCKED_NETWORKS)
 
-def validate_target_url(url: str, allow_localhost_for_testing: bool = False) -> Tuple[bool, Optional[str]]:
-    """
-    Validates a submitted application URL against SSRF attacks.
-    Returns (is_valid: bool, error_message: Optional[str]).
-    """
+
+@dataclass
+class ResolvedTarget:
+    scheme: str
+    hostname: str
+    port: int
+    path: str
+    ips: List[str] = field(default_factory=list)  # validated, connect to these only
+
+
+def validate_and_resolve(
+    url: str,
+    *,
+    require_https: bool = True,
+    allowed_ports: Optional[Sequence[int]] = DEFAULT_ALLOWED_PORTS,
+    allow_localhost_for_testing: bool = False,
+) -> Tuple[bool, Optional[str], Optional[ResolvedTarget]]:
+    """Strict validation. Returns (ok, error, ResolvedTarget)."""
+    if allow_localhost_for_testing and _production():
+        allow_localhost_for_testing = False  # never honoured in production
     if not url or not isinstance(url, str):
-        return False, "URL cannot be empty."
-    
-    parsed = urlparse(url)
-    if parsed.scheme not in ["http", "https"]:
-        return False, f"Invalid URL scheme '{parsed.scheme}'. Only 'http' and 'https' are permitted."
-    
+        return False, "URL cannot be empty.", None
+    if len(url) > MAX_URL_LENGTH:
+        return False, "URL is too long.", None
+    try:
+        parsed = urlparse(url.strip())
+        port_in_url = parsed.port  # raises ValueError on bad port
+    except ValueError:
+        return False, "Malformed URL.", None
+
+    schemes = ("https",) if require_https else ("http", "https")
+    if parsed.scheme not in schemes:
+        which = "'https'" if require_https else "'http' and 'https'"
+        return False, f"Invalid URL scheme '{parsed.scheme}'. Only {which} are permitted.", None
+    if parsed.username or parsed.password:
+        return False, "Credentials in URL are not permitted.", None
     hostname = parsed.hostname
     if not hostname:
-        return False, "Invalid URL: missing hostname."
-    
-    if hostname.lower() in ["localhost", "127.0.0.1", "::1", "metadata.google.internal"] and not allow_localhost_for_testing:
-        return False, "Forbidden target host: Loopback/localhost destinations are prohibited."
-    
-    # If in dev/test mode and localhost is explicitly allowed for mock agents
-    if allow_localhost_for_testing and hostname.lower() in ["localhost", "127.0.0.1"]:
-        return True, None
+        return False, "Invalid URL: missing hostname.", None
+    hostname = hostname.rstrip(".").lower()
+    port = port_in_url or (443 if parsed.scheme == "https" else 80)
+    path = parsed.path or ""
+
+    if hostname in LOOPBACK_NAMES or hostname in ("127.0.0.1", "::1"):
+        if allow_localhost_for_testing and hostname in ("localhost", "127.0.0.1", "::1"):
+            return True, None, ResolvedTarget(parsed.scheme, hostname, port, path, ["127.0.0.1"])
+        return False, "Forbidden target host: Loopback/localhost destinations are prohibited.", None
+
+    if allowed_ports is not None and port not in allowed_ports:
+        return False, f"Port {port} is not permitted.", None
 
     try:
-        # Resolve all DNS A/AAAA records
-        addr_info = socket.getaddrinfo(hostname, parsed.port or (443 if parsed.scheme == "https" else 80))
-        for res in addr_info:
-            ip = res[4][0]
-            if is_ip_prohibited(ip):
-                return False, f"Security Violation: Target host resolves to restricted IP address ({ip})."
+        infos = socket.getaddrinfo(hostname, port, proto=socket.IPPROTO_TCP)
     except socket.gaierror:
-        return False, f"DNS Resolution failed for host '{hostname}'."
-    except Exception as e:
-        return False, f"URL validation error: {str(e)}"
-    
-    return True, None
+        return False, f"DNS Resolution failed for host '{hostname}'.", None
+    except Exception:
+        return False, "URL validation error.", None
+
+    ips: List[str] = []
+    for info in infos:
+        ip = info[4][0]
+        if is_ip_prohibited(ip):
+            return False, "Security Violation: Target host resolves to a restricted IP address.", None
+        if ip not in ips:
+            ips.append(ip)
+    if not ips:
+        return False, f"DNS Resolution failed for host '{hostname}'.", None
+    return True, None, ResolvedTarget(parsed.scheme, hostname, port, path, ips)
+
+
+def validate_target_url(url: str, allow_localhost_for_testing: bool = False) -> Tuple[bool, Optional[str]]:
+    """Legacy contract kept for existing callers: (is_valid, error). Accepts http+https, any port."""
+    ok, err, _ = validate_and_resolve(
+        url, require_https=False, allowed_ports=None,
+        allow_localhost_for_testing=allow_localhost_for_testing,
+    )
+    return ok, err

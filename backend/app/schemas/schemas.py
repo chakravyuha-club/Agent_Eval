@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, model_validator
 from typing import Optional, List, Dict, Any
 from datetime import datetime
 
@@ -110,7 +110,7 @@ class SubmissionResponse(BaseModel):
 
 class TaskResultResponse(BaseModel):
     task_id: str
-    run_number: int
+    run_number: int = 1
     passed: bool
     latency_ms: float
     safe_error_category: Optional[str] = None
@@ -130,6 +130,7 @@ class EvaluationResultResponse(BaseModel):
     result_status: str
     created_at: datetime
     task_results: List[TaskResultResponse] = []
+    failure_summary: Optional[Dict[str, int]] = None
 
 class EvaluationJobResponse(BaseModel):
     id: str
@@ -165,6 +166,20 @@ class RubricSchema(BaseModel):
 
     stage_1_ratio: float = 0.60
     stage_2_ratio: float = 0.40
+
+    @model_validator(mode="after")
+    def validate_weights(self):
+        if self.stage == 1:
+            total = self.weight_accuracy + self.weight_tool + self.weight_constraint + self.weight_quality + self.weight_efficiency
+            if abs(total - 1.0) > 1e-4:
+                raise ValueError(f"Stage 1 rubric weights must sum to 1.0 (current sum: {round(total, 4)})")
+        elif self.stage == 2:
+            total = self.weight_stage2_tsr + self.weight_stage2_outcome + self.weight_stage2_reliability + self.weight_stage2_tool + self.weight_stage2_safety + self.weight_stage2_efficiency
+            if abs(total - 1.0) > 1e-4:
+                raise ValueError(f"Stage 2 rubric weights must sum to 1.0 (current sum: {round(total, 4)})")
+        if abs((self.stage_1_ratio + self.stage_2_ratio) - 1.0) > 1e-4:
+            raise ValueError("Competition stage ratios (stage_1_ratio + stage_2_ratio) must sum to 1.0")
+        return self
 
 # ==================== Leaderboard ====================
 class LeaderboardEntry(BaseModel):

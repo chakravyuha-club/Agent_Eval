@@ -141,6 +141,8 @@ def seed_database():
             os.makedirs(storage_dir, exist_ok=True)
 
             sample_sub_path = os.path.join(os.getcwd(), "datasets", "sample_submission.csv")
+            if not os.path.exists(sample_sub_path):
+                sample_sub_path = os.path.join(os.path.dirname(__file__), "..", "..", "..", "datasets", "sample_submission.csv")
 
             for i in range(1, 51):
                 t_code = f"team_{i:02d}"
@@ -186,14 +188,11 @@ def seed_database():
 
                         sub = Submission(
                             team_id=team.id,
-                            competition_id=comp.id,
                             stage=1,
-                            submission_type="file",
                             file_storage_path=dest_sub,
-                            notes=f"Initial Stage 1 baseline submission by {t_name}",
                             submission_version=1,
                             status="completed",
-                            selected_for_evaluation=True
+                            is_official=True
                         )
                         db.add(sub)
                         db.flush()
@@ -206,7 +205,7 @@ def seed_database():
                             submission_id=sub.id,
                             team_id=team.id,
                             stage=1,
-                            status="passed",
+                            status="completed",
                             attempt_count=1,
                             queued_at=utcnow() - timedelta(minutes=60),
                             started_at=utcnow() - timedelta(minutes=59),

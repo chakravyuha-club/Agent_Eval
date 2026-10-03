@@ -71,14 +71,14 @@ export default function SubmissionResultsPage() {
   }, []);
 
   const fetchLatestSubmission = async () => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('agentscore_token') || localStorage.getItem('token');
     if (!token) {
       router.push('/login');
       return;
     }
 
     try {
-      const res = await fetch('http://localhost:8000/api/submissions/my', {
+      const res = await fetch('/api/submissions/my', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (res.ok) {
@@ -104,10 +104,10 @@ export default function SubmissionResultsPage() {
   const fetchResults = async (subId: string) => {
     setLoading(true);
     setError(null);
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('agentscore_token') || localStorage.getItem('token');
 
     try {
-      const res = await fetch(`http://localhost:8000/api/submissions/${subId}/results`, {
+      const res = await fetch(`/api/submissions/${subId}/results`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
 

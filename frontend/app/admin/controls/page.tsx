@@ -122,7 +122,7 @@ export default function AdminControlsPage() {
             <span>Freeze Final Results & Crown Top 3</span>
           </button>
           <a
-            href={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/admin/exports/results`}
+            href={`${process.env.NEXT_PUBLIC_API_URL || ''}/api/admin/export/results.csv`}
             target="_blank"
             className="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold transition-all flex items-center space-x-1.5"
           >

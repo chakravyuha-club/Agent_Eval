@@ -136,7 +136,7 @@ export default function AdminOverviewPage() {
           </Link>
 
           <a
-            href={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/admin/exports/results`}
+            href={`${process.env.NEXT_PUBLIC_API_URL || ''}/api/admin/export/results.csv`}
             target="_blank"
             className="p-4 rounded-2xl bg-slate-50 hover:bg-slate-100 border border-slate-200 transition-all flex items-center space-x-3 group"
           >

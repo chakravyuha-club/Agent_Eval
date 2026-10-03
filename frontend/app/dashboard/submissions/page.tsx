@@ -45,7 +45,7 @@ export default function SubmissionsPage() {
 
     try {
       const token = localStorage.getItem('agentscore_token');
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || '';
       const res = await fetch(`${apiUrl}/api/submissions/stage-1`, {
         method: 'POST',
         headers: {

@@ -1,0 +1,57 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Database & Storage
+*.sqlite3
+*.db
+storage/uploads/
+storage/datasets/private/
+backend/storage/uploads/
+backend/storage/datasets/private/
+
+# Node / Frontend
+node_modules/
+.next/
+out/
+.npm
+*.tsbuildinfo
+.DS_Store
+
+# Environment & Secrets
+.env
+.env.local
+.env.production
+*.pem
+*.key
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo

@@ -1,0 +1,6 @@
+task_id,domain,query,input_context
+pub_001,finance,"Evaluate corporate debt-to-equity ratio for Beta Corp.","{'debt': 5000000, 'equity': 10000000}"
+pub_002,healthcare,"Identify contraindications for Patient #1029 with asthma.","{'medications': ['albuterol', 'prednisone']}"
+pub_003,logistics,"Calculate minimum fleet vehicles needed for 120 deliveries.","{'capacity_per_truck': 20, 'shift_hours': 8}"
+pub_004,cybersecurity,"Classify network packet header for port scan anomaly.","{'port_count': 1024, 'duration_ms': 120}"
+pub_005,customer_service,"Generate friendly response for late shipment ticket #9901.","{'customer': 'Alice', 'days_delayed': 2}"

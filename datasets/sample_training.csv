@@ -1,0 +1,11 @@
+task_id,domain,query,expected_category,required_tool,target_label
+task_001,finance,"Analyze quarterly revenue growth for Acme Corp.",financial_analysis,sec_filing_extractor,positive_growth
+task_002,healthcare,"Summarize clinical trial efficacy for drug candidate XYZ.",medical_research,clinical_trials_search,high_efficacy
+task_003,logistics,"Optimize multi-hop shipping route under 48 hours.",routing_optimizer,geo_route_solver,route_valid
+task_004,cybersecurity,"Detect SQL injection vector in input query parameter.",threat_detection,payload_analyzer,attack_detected
+task_005,customer_service,"Resolve customer billing refund dispute.",crm_support,stripe_refund_tool,refund_processed
+task_006,code_generation,"Refactor legacy Python sorting algorithm to O(n log n).",programming,ast_refactoring_tool,code_optimized
+task_007,data_extraction,"Extract invoice total, VAT number and vendor name from PDF text.",extraction,invoice_ocr_parser,data_extracted
+task_008,finance,"Assess credit default risk for SME loan application #4912.",financial_analysis,credit_score_calc,low_risk
+task_009,healthcare,"Check drug-drug interaction between Warfarin and Aspirin.",medical_research,drug_interaction_db,severe_interaction
+task_010,iot,"Diagnose anomalous sensor temperature spike in engine unit 4.",anomaly_detection,timeseries_analyzer,anomaly_confirmed

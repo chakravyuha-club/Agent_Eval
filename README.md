@@ -1,6 +1,6 @@
 # AgentEval (AgentScore) — Multi-Dimensional AI Agent Evaluation & Competition Platform
 
-[![GitHub Repo](https://img.shields.io/badge/GitHub-SaiRishitha29%2FAgentEval-purple.svg?logo=github)](https://github.com/SaiRishitha29/AgentEval)
+[![GitHub Repo](https://img.shields.io/badge/GitHub-chakravyuha--club%2FAgent__Eval-purple.svg?logo=github)](https://github.com/chakravyuha-club/Agent_Eval)
 [![License: MIT](https://img.shields.io/badge/License-MIT-purple.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.11+](https://img.shields.io/badge/Python-3.11%2B-blue.svg)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688.svg)](https://fastapi.tiangolo.com/)
@@ -9,7 +9,7 @@
 [![Status](https://img.shields.io/badge/Status-Production%20Ready-success.svg)](#)
 
 **AgentEval** (also known as **AgentScore**) is an enterprise-grade, multi-dimensional evaluation platform designed for conducting high-stakes **AI Agent Building Competitions** (e.g., 18-hour university hackathons with 50 teams, 1–3 members per team).
-Official Repository: [https://github.com/SaiRishitha29/AgentEval](https://github.com/SaiRishitha29/AgentEval)
+Official Repository: [https://github.com/chakravyuha-club/Agent_Eval](https://github.com/chakravyuha-club/Agent_Eval)
 
 Unlike superficial leaderboard tools that solely measure text generation or single classification metrics, AgentScore evaluates submitted AI systems across six holistic agentic dimensions: **Task Performance**, **Agentic Trajectory Quality**, **Reliability ($pass@1$ & $pass^3$)**, **Output Quality & Groundedness**, **Safety & Constraint Compliance**, and **Operational Latency & Efficiency**.
 

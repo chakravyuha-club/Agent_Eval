@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  darkMode: 'class',
   content: [
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
@@ -7,6 +8,10 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['var(--font-oxygen)', 'Oxygen', 'sans-serif'],
+        oxygen: ['var(--font-oxygen)', 'Oxygen', 'sans-serif'],
+      },
       colors: {
         brand: {
           50: '#faf5ff',
@@ -20,6 +25,12 @@ module.exports = {
           800: '#6b21a8',
           900: '#581c87',
           950: '#3b0764',
+        },
+        dark: {
+          bg: '#0a0714',
+          card: '#120d24',
+          border: '#23183d',
+          hover: '#1c1438',
         }
       }
     },

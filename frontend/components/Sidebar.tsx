@@ -9,6 +9,7 @@ import {
   CheckCircle2, Trophy, Users, Sliders, ShieldCheck,
   History, LogOut
 } from 'lucide-react';
+import ThemeToggle from '@/components/ThemeToggle';
 
 interface SidebarProps {
   isAdmin?: boolean;
@@ -39,23 +40,23 @@ export default function Sidebar({ isAdmin = false }: SidebarProps) {
   const navItems = isAdmin ? adminNavItems : teamNavItems;
 
   return (
-    <aside className="w-64 bg-white border-r border-purple-100 flex flex-col justify-between h-[calc(100vh-4rem)] sticky top-16 shadow-sm">
+    <aside className="w-64 bg-white dark:bg-[#0e091d]/90 border-r border-purple-100 dark:border-purple-900/30 flex flex-col justify-between h-[calc(100vh-4rem)] sticky top-16 shadow-sm transition-colors duration-300">
       <div className="p-4 space-y-6">
-        <div className="px-3 py-2 bg-purple-50/70 rounded-xl border border-purple-100">
-          <p className="text-xs font-semibold uppercase tracking-wider text-purple-600">
+        <div className="px-3.5 py-2.5 bg-purple-50/70 dark:bg-purple-950/40 rounded-2xl border border-purple-100 dark:border-purple-800/40">
+          <p className="text-[11px] font-semibold uppercase tracking-wider text-purple-600 dark:text-purple-400">
             {isAdmin ? 'Administrative Suite' : 'Team Workspace'}
           </p>
-          <p className="text-sm font-bold text-slate-800 truncate mt-0.5">
+          <p className="text-sm font-bold text-slate-800 dark:text-slate-100 truncate mt-0.5">
             {isAdmin ? (user?.email || 'Super Admin') : (user?.team_name || user?.team_code?.toUpperCase() || 'Participant')}
           </p>
           {!isAdmin && user?.team_code && (
-            <span className="inline-block px-2 py-0.5 mt-1.5 text-[11px] font-semibold bg-purple-200/80 text-purple-900 rounded-md">
+            <span className="inline-block px-2 py-0.5 mt-1.5 text-[11px] font-semibold bg-purple-200/80 dark:bg-purple-900/80 text-purple-900 dark:text-purple-200 rounded-md">
               ID: {user.team_code}
             </span>
           )}
         </div>
 
-        <nav className="space-y-1">
+        <nav className="space-y-1.5">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = pathname === item.href;
@@ -63,13 +64,13 @@ export default function Sidebar({ isAdmin = false }: SidebarProps) {
               <Link
                 key={item.name}
                 href={item.href}
-                className={`flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
+                className={`flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
                   isActive
-                    ? 'bg-purple-600 text-white shadow-sm shadow-purple-600/20'
-                    : 'text-slate-600 hover:text-purple-700 hover:bg-purple-50/60'
+                    ? 'bg-purple-600 text-white shadow-sm shadow-purple-600/30 font-semibold'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-purple-700 dark:hover:text-purple-300 hover:bg-purple-50/70 dark:hover:bg-purple-950/40'
                 }`}
               >
-                <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-slate-400'}`} />
+                <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-slate-400 dark:text-slate-500'}`} />
                 <span>{item.name}</span>
               </Link>
             );
@@ -77,10 +78,14 @@ export default function Sidebar({ isAdmin = false }: SidebarProps) {
         </nav>
       </div>
 
-      <div className="p-4 border-t border-purple-50">
+      <div className="p-4 border-t border-purple-50 dark:border-purple-900/20 space-y-2">
+        <div className="flex items-center justify-between px-2 py-1">
+          <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">Theme</span>
+          <ThemeToggle />
+        </div>
         <button
           onClick={logout}
-          className="flex items-center space-x-2 w-full px-3 py-2 text-sm font-medium text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+          className="flex items-center space-x-2 w-full px-3 py-2 text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-xl transition-colors"
         >
           <LogOut className="w-4 h-4" />
           <span>Sign Out</span>

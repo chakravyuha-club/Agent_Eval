@@ -55,24 +55,24 @@ export default function LandingPage() {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#faf8ff]">
+    <div className="min-h-screen flex flex-col bg-[#faf8ff] dark:bg-[#0a0714] text-slate-900 dark:text-slate-100 transition-colors duration-300">
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden pt-20 pb-28 gradient-hero-bg border-b border-purple-100">
+      <section className="relative overflow-hidden pt-20 pb-28 gradient-hero-bg border-b border-purple-100 dark:border-purple-900/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-          <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-purple-100/80 border border-purple-200 text-purple-800 text-xs font-semibold mb-6 shadow-sm">
+          <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-purple-100/80 dark:bg-purple-950/60 border border-purple-200 dark:border-purple-800/50 text-purple-800 dark:text-purple-300 text-xs font-semibold mb-6 shadow-sm">
             <span className="flex h-2 w-2 rounded-full bg-purple-600 animate-ping" />
             <span>18-Hour AI Agent Building Competition</span>
           </div>
 
-          <h1 className="text-4xl sm:text-6xl font-black tracking-tight text-slate-900 max-w-4xl mx-auto leading-[1.15]">
+          <h1 className="text-4xl sm:text-6xl font-black tracking-tight text-slate-900 dark:text-white max-w-4xl mx-auto leading-[1.15]">
             Build Intelligent Agents.{' '}
             <span className="gradient-purple-text block sm:inline">Prove Their Performance.</span>
           </h1>
 
-          <p className="mt-6 text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
-            The multi-dimensional evaluation platform for AI agents. Automated two-stage scoring across task success, reliability ($pass^3$), tool usage, safety guardrails, and operational latency.
+          <p className="mt-6 text-lg sm:text-xl text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed">
+            The multi-dimensional evaluation platform for AI agents. Automated two-stage scoring across task success, reliability (pass³), tool usage, safety guardrails, and operational latency.
           </p>
 
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -85,9 +85,9 @@ export default function LandingPage() {
             </Link>
             <Link
               href="/dashboard/leaderboard"
-              className="w-full sm:w-auto px-8 py-4 rounded-xl bg-white hover:bg-purple-50/50 text-slate-800 font-semibold text-base border border-purple-200 shadow-sm transition-all flex items-center justify-center space-x-2"
+              className="w-full sm:w-auto px-8 py-4 rounded-xl bg-white dark:bg-[#130d28] hover:bg-purple-50/50 dark:hover:bg-purple-950/40 text-slate-800 dark:text-slate-100 font-semibold text-base border border-purple-200 dark:border-purple-800/40 shadow-sm transition-all flex items-center justify-center space-x-2"
             >
-              <Trophy className="w-5 h-5 text-purple-600" />
+              <Trophy className="w-5 h-5 text-purple-600 dark:text-purple-400" />
               <span>Live Leaderboard</span>
             </Link>
           </div>
@@ -95,54 +95,54 @@ export default function LandingPage() {
           {/* Stats Badges */}
           <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
             <div className="p-4 rounded-2xl glass-panel text-center">
-              <p className="text-3xl font-black text-purple-900">50</p>
-              <p className="text-xs font-medium text-slate-500 mt-1 uppercase tracking-wider">Registered Teams</p>
+              <p className="text-3xl font-black text-purple-900 dark:text-purple-300">50</p>
+              <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-1 uppercase tracking-wider">Registered Teams</p>
             </div>
             <div className="p-4 rounded-2xl glass-panel text-center">
-              <p className="text-3xl font-black text-purple-900">18h</p>
-              <p className="text-xs font-medium text-slate-500 mt-1 uppercase tracking-wider">Hackathon Duration</p>
+              <p className="text-3xl font-black text-purple-900 dark:text-purple-300">18h</p>
+              <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-1 uppercase tracking-wider">Hackathon Duration</p>
             </div>
             <div className="p-4 rounded-2xl glass-panel text-center">
-              <p className="text-3xl font-black text-purple-900">Top 20</p>
-              <p className="text-xs font-medium text-slate-500 mt-1 uppercase tracking-wider">Stage 1 Qualification</p>
+              <p className="text-3xl font-black text-purple-900 dark:text-purple-300">Top 20</p>
+              <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-1 uppercase tracking-wider">Stage 1 Qualification</p>
             </div>
             <div className="p-4 rounded-2xl glass-panel text-center">
-              <p className="text-3xl font-black text-purple-900">Top 3</p>
-              <p className="text-xs font-medium text-slate-500 mt-1 uppercase tracking-wider">Final Winners</p>
+              <p className="text-3xl font-black text-purple-900 dark:text-purple-300">Top 3</p>
+              <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-1 uppercase tracking-wider">Final Winners</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* Two-Stage Timeline */}
-      <section className="py-20 bg-white border-b border-purple-100">
+      <section className="py-20 bg-white dark:bg-[#0e091d] border-b border-purple-100 dark:border-purple-900/30 transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto">
-            <h2 className="text-3xl font-black text-slate-900 tracking-tight">Competition Structure & Workflow</h2>
-            <p className="mt-3 text-slate-600">A rigorous two-stage evaluation pipeline combining tabular benchmark predictions and live agent probing.</p>
+            <h2 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Competition Structure & Workflow</h2>
+            <p className="mt-3 text-slate-600 dark:text-slate-400">A rigorous two-stage evaluation pipeline combining tabular benchmark predictions and live agent probing.</p>
           </div>
 
           <div className="mt-12 grid md:grid-cols-2 gap-8">
-            <div className="p-8 rounded-2xl border border-purple-100 bg-purple-50/40 relative">
+            <div className="p-8 rounded-2xl border border-purple-100 dark:border-purple-800/40 bg-purple-50/40 dark:bg-purple-950/20 relative">
               <span className="px-3 py-1 text-xs font-bold uppercase rounded-full bg-purple-600 text-white">Stage 1</span>
-              <h3 className="text-xl font-bold text-slate-900 mt-4">Prediction-File Evaluation</h3>
-              <p className="text-sm text-slate-600 mt-2">
+              <h3 className="text-xl font-bold text-slate-900 dark:text-white mt-4">Prediction-File Evaluation</h3>
+              <p className="text-sm text-slate-600 dark:text-slate-300 mt-2">
                 Teams download the problem statement and public dataset, build their agent system, and upload CSV/XLSX predictions. The server deterministically scores against hidden test cases.
               </p>
-              <div className="mt-6 flex items-center space-x-2 text-xs font-semibold text-purple-700 bg-purple-100/70 p-3 rounded-xl">
-                <CheckCircle2 className="w-4 h-4 text-purple-600" />
+              <div className="mt-6 flex items-center space-x-2 text-xs font-semibold text-purple-700 dark:text-purple-300 bg-purple-100/70 dark:bg-purple-900/40 p-3 rounded-xl">
+                <CheckCircle2 className="w-4 h-4 text-purple-600 dark:text-purple-400" />
                 <span>Automatic Qualification: Top 20 teams advance to Stage 2.</span>
               </div>
             </div>
 
-            <div className="p-8 rounded-2xl border border-purple-100 bg-indigo-50/40 relative">
+            <div className="p-8 rounded-2xl border border-purple-100 dark:border-purple-800/40 bg-indigo-50/40 dark:bg-indigo-950/20 relative">
               <span className="px-3 py-1 text-xs font-bold uppercase rounded-full bg-indigo-600 text-white">Stage 2</span>
-              <h3 className="text-xl font-bold text-slate-900 mt-4">Live Deployed Agent Testing</h3>
-              <p className="text-sm text-slate-600 mt-2">
+              <h3 className="text-xl font-bold text-slate-900 dark:text-white mt-4">Live Deployed Agent Testing</h3>
+              <p className="text-sm text-slate-600 dark:text-slate-300 mt-2">
                 Qualified teams submit their deployed HTTP application URL. The evaluator safely connects to /health and /predict across hidden multi-run test suites to verify reliability, tool accuracy, and safety.
               </p>
-              <div className="mt-6 flex items-center space-x-2 text-xs font-semibold text-indigo-700 bg-indigo-100/70 p-3 rounded-xl">
-                <Trophy className="w-4 h-4 text-indigo-600" />
+              <div className="mt-6 flex items-center space-x-2 text-xs font-semibold text-indigo-700 dark:text-indigo-300 bg-indigo-100/70 dark:bg-indigo-900/40 p-3 rounded-xl">
+                <Trophy className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
                 <span>Final Output: Top 3 Winners crowned from composite scores.</span>
               </div>
             </div>
@@ -151,11 +151,11 @@ export default function LandingPage() {
       </section>
 
       {/* 6 Dimensions Grid */}
-      <section className="py-20 bg-[#faf8ff]">
+      <section className="py-20 bg-[#faf8ff] dark:bg-[#0a0714] transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto">
-            <h2 className="text-3xl font-black text-slate-900 tracking-tight">The 6 Evaluation Dimensions</h2>
-            <p className="mt-3 text-slate-600">
+            <h2 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">The 6 Evaluation Dimensions</h2>
+            <p className="mt-3 text-slate-600 dark:text-slate-400">
               AgentScore evaluates holistic agent intelligence rather than superficial text outputs.
             </p>
           </div>
@@ -164,12 +164,12 @@ export default function LandingPage() {
             {dimensions.map((dim) => {
               const Icon = dim.icon;
               return (
-                <div key={dim.id} className="p-6 rounded-2xl bg-white border border-purple-100 shadow-sm hover:shadow-md transition-all">
+                <div key={dim.id} className="p-6 rounded-2xl bg-white dark:bg-[#130d28] border border-purple-100 dark:border-purple-900/30 shadow-sm hover:shadow-md transition-all">
                   <div className={`w-12 h-12 rounded-xl bg-gradient-to-tr ${dim.color} flex items-center justify-center text-white shadow-md mb-4`}>
                     <Icon className="w-6 h-6" />
                   </div>
-                  <h3 className="text-base font-bold text-slate-900">{dim.title}</h3>
-                  <p className="text-xs text-slate-600 mt-2 leading-relaxed">{dim.desc}</p>
+                  <h3 className="text-base font-bold text-slate-900 dark:text-white">{dim.title}</h3>
+                  <p className="text-xs text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">{dim.desc}</p>
                 </div>
               );
             })}
@@ -178,13 +178,13 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="mt-auto border-t border-purple-100 bg-white py-8 text-center text-xs text-slate-500">
+      <footer className="mt-auto border-t border-purple-100 dark:border-purple-900/30 bg-white dark:bg-[#0e091d] py-8 text-center text-xs text-slate-500 dark:text-slate-400 transition-colors">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p>© 2026 AgentScore — University Technical Club AI Competition. All rights reserved.</p>
-          <div className="flex space-x-6 text-slate-400">
-            <Link href="/login" className="hover:text-purple-600">Leader Portal</Link>
-            <Link href="/dashboard/leaderboard" className="hover:text-purple-600">Rankings</Link>
-            <Link href="/dashboard/problem" className="hover:text-purple-600">Documentation</Link>
+          <div className="flex space-x-6 text-slate-400 dark:text-slate-500">
+            <Link href="/login" className="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Leader Portal</Link>
+            <Link href="/dashboard/leaderboard" className="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Rankings</Link>
+            <Link href="/dashboard/problem" className="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Documentation</Link>
           </div>
         </div>
       </footer>

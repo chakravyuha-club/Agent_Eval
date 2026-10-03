@@ -26,17 +26,17 @@ export default function AdminLayout({
 
   if (loading || !user || user.role !== 'admin') {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#faf8ff]">
+      <div className="min-h-screen flex items-center justify-center bg-[#faf8ff] dark:bg-[#0a0714] transition-colors">
         <div className="flex flex-col items-center space-y-3">
           <div className="w-10 h-10 border-4 border-purple-600 border-t-transparent rounded-full animate-spin" />
-          <p className="text-xs font-semibold text-purple-900 uppercase tracking-wider">Verifying Admin Privileges...</p>
+          <p className="text-xs font-semibold text-purple-900 dark:text-purple-300 uppercase tracking-wider">Verifying Admin Privileges...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#faf8ff]">
+    <div className="min-h-screen flex flex-col bg-[#faf8ff] dark:bg-[#0a0714] transition-colors duration-300">
       <Navbar />
       <div className="flex-1 flex max-w-7xl w-full mx-auto">
         <Sidebar isAdmin={true} />
